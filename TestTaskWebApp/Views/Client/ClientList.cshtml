@@ -1,0 +1,67 @@
+﻿@model IEnumerable<TestTaskWebApp.Models.Client>
+
+<table class="table" id="client-list-data">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.Name)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Surname)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.PhoneNumber)
+		</th>
+		<th></th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Name)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Surname)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.PhoneNumber)
+			</td>
+			<td>
+				<button class="btn-action-edit btn btn-primary" item-data="@item.Id">Редактировать</button>
+				<button class="btn-action-delete btn btn-danger" item-data="@item.Id">Удалить</button>
+			</td>
+		</tr>
+	}
+</table>
+
+@section Scripts{
+	<script type="text/javascript">
+
+		$(function () {
+
+			$(".btn-action-edit").click(function (e) {
+				e.preventDefault();
+				$.get("details/" + e.target.attributes["item-data"].value, function (data) {
+					$('#dialogContent').html(data);
+					$('#modDialog').modal('show');
+					updateClientTable($("#current-page").val());
+					/**/
+					$.get("/merchandize/listitems?clientid=" +e.target.attributes["item-data"].value, function (result) {
+			/**/
+			$('#client-orders').html(result);
+		})
+	});
+});
+
+$(".btn-action-delete").click(function (e) {
+	e.preventDefault();
+	$.get("remove/" + e.target.attributes["item-data"].value, function (data) {
+		if (!data.error) {
+			updateClientTable($("#current-page").val());
+		}
+	});
+});
+})
+
+	</script>
+}

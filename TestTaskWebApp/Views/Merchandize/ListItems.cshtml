@@ -1,0 +1,32 @@
+﻿@model TestTaskWebApp.Models.MerchandizeListViewModel
+
+<p onclick="onMerchAddClick()">
+    Добавить товар
+</p>
+
+<p style="visibility:hidden" id="client-id">@Model.ClientId</p>
+<table>
+    <tr>
+        <th>
+        </th>
+        <th>
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Merchandize) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,71 @@
+﻿@model IEnumerable<TestTaskWebApp.Models.Client>
+
+@{
+	ViewBag.Title = "Список клиентов";
+}
+
+<h2>Список клиентов</h2>
+
+<div id="modDialog" class="modal fade">
+	<div id="dialogContent" class="modal-dialog"></div>
+</div>
+
+<p id="add-client-data" style="cursor:pointer">Добавить запись</p>
+<table class="table" id="client-list-data">
+
+</table>
+
+<div>
+	<p id="prev-page">Предыдущая страница</p>
+	<p id="next-page">Следующая страница</p>
+	<p style="visibility:hidden" id="current-page"></p>
+</div>
+
+@section scripts
+{
+	@Scripts.Render("~/Scripts/client-details-partial-view-script.js")
+	<script type="text/javascript">
+
+		$(function () {
+			$.ajaxSetup({ cache: false });
+			$("#add-client-data").click(function (e) {
+
+				e.preventDefault();
+				$.get("details/-1", function (data) {
+					$('#dialogContent').html(data);
+					$('#modDialog').modal('show');
+				});
+			});
+
+			$(document).ready(() => {
+				updateClientTable(1);
+				$("#current-page").val(1);
+			});
+
+
+			$("#prev-page").click((event) => {
+				updateClientTable(Number($("#current-page").val()) - 1);
+				$("#current-page").val(Number($("#current-page").val()) - 1);
+			});
+
+			$("#next-page").click((event) => {
+				updateClientTable(Number($("#current-page").val()) + 1);
+				$("#current-page").val(Number($("#current-page").val()) + 1);
+			});
+		});
+
+		function updateClientTable(pageNo) {
+			$.get("clientlist?pageNo=" + pageNo, function (data) {
+				$('#client-list-data').html(data);
+			});
+		}
+
+		function onMerchAddClick(e) {
+			$.get("/merchandize/details?id=-1&userId=" + $("#client-id").val(), function (data) {
+				$('#dialogContent').html(data);
+				$('#modDialog').modal('show');
+			});
+		}
+
+	</script>
+}
